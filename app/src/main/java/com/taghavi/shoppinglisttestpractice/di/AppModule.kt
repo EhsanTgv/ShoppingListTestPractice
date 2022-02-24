@@ -2,8 +2,11 @@ package com.taghavi.shoppinglisttestpractice.di
 
 import android.content.Context
 import androidx.room.Room
+import com.taghavi.shoppinglisttestpractice.data.local.ShoppingDao
 import com.taghavi.shoppinglisttestpractice.data.local.ShoppingDatabase
 import com.taghavi.shoppinglisttestpractice.data.remote.PixabayAPI
+import com.taghavi.shoppinglisttestpractice.repositories.DefaultShoppingRepository
+import com.taghavi.shoppinglisttestpractice.repositories.ShoppingRepository
 import com.taghavi.shoppinglisttestpractice.utils.Constants.BASE_URL
 import com.taghavi.shoppinglisttestpractice.utils.Constants.DATABASE_NAME
 import dagger.Module
@@ -24,6 +27,13 @@ object AppModule {
     fun provideShoppingItemDatabase(
         @ApplicationContext context: Context
     ) = Room.databaseBuilder(context, ShoppingDatabase::class.java, DATABASE_NAME)
+
+    @Singleton
+    @Provides
+    fun provideDefaultShoppingRepository(
+        dao: ShoppingDao,
+        api: PixabayAPI,
+    ) = DefaultShoppingRepository(dao, api) as ShoppingRepository
 
     @Singleton
     @Provides
