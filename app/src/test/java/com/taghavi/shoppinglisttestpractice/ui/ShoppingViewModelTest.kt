@@ -6,6 +6,11 @@ import com.taghavi.shoppinglisttestpractice.getOrAwaitValueTest
 import com.taghavi.shoppinglisttestpractice.repositories.FakeShoppingRepository
 import com.taghavi.shoppinglisttestpractice.utils.Constants
 import com.taghavi.shoppinglisttestpractice.utils.Status
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -14,12 +19,20 @@ class ShoppingViewModelTest {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
     private lateinit var viewModel: ShoppingViewModel
 
     @Before
     fun setup() {
+        Dispatchers.setMain(mainThreadSurrogate)
         viewModel = ShoppingViewModel(FakeShoppingRepository())
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain() // reset the main dispatcher to the original Main dispatcher
+        mainThreadSurrogate.close()
     }
 
     @Test
