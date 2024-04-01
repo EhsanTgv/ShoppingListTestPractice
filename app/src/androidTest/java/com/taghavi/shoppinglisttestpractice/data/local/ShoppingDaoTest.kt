@@ -3,7 +3,7 @@ package com.taghavi.shoppinglisttestpractice.data.local
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
 import com.google.common.truth.Truth.assertThat
-import com.taghavi.shoppinglisttestpractice.getOrAwaitValueTest
+import com.taghavi.shoppinglisttestpractice.getOrAwaitValue
 import com.taghavi.shoppinglisttestpractice.launchFragmentInHiltContainer
 import com.taghavi.shoppinglisttestpractice.ui.ShoppingFragment
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -54,7 +54,7 @@ class ShoppingDaoTest {
         val shoppingItem = ShoppingItem(1, "name", 1, 1f, "url")
         dao.insertShoppingItem(shoppingItem)
 
-        val allShoppingItem = dao.observeAllShoppingItems().getOrAwaitValueTest()
+        val allShoppingItem = dao.observeAllShoppingItems().getOrAwaitValue()
 
         assertThat(allShoppingItem).contains(shoppingItem)
     }
@@ -65,7 +65,7 @@ class ShoppingDaoTest {
         dao.insertShoppingItem(shoppingItem)
         dao.deleteShoppingItem(shoppingItem)
 
-        val allShoppingItem = dao.observeAllShoppingItems().getOrAwaitValueTest()
+        val allShoppingItem = dao.observeAllShoppingItems().getOrAwaitValue()
 
         assertThat(allShoppingItem).doesNotContain(shoppingItem)
     }
@@ -73,13 +73,13 @@ class ShoppingDaoTest {
     @Test
     fun observeTotalPriceSum() = runBlockingTest {
         val shoppingItem1 = ShoppingItem(1, "name", 2, 10f, "url")
-        val shoppingItem2 = ShoppingItem(1, "name", 4, 5.5f, "url")
-        val shoppingItem3 = ShoppingItem(1, "name", 0, 100f, "url")
+        val shoppingItem2 = ShoppingItem(2, "name", 4, 5.5f, "url")
+        val shoppingItem3 = ShoppingItem(3, "name", 0, 100f, "url")
         dao.insertShoppingItem(shoppingItem1)
         dao.insertShoppingItem(shoppingItem2)
         dao.insertShoppingItem(shoppingItem3)
 
-        val totalPrice = dao.observeTotalPrice().getOrAwaitValueTest()
+        val totalPrice = dao.observeTotalPrice().getOrAwaitValue()
 
         assertThat(totalPrice).isEqualTo(2 * 10f + 4 * 5.5f)
     }
